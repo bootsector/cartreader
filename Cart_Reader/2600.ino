@@ -44,6 +44,7 @@ static const byte PROGMEM a2600mapsize[] = {
   0xDF, 7,  // "DFSC" Penult 128K ROM with 32K RAM
   0xBA, 7,  // SUPERBank 128K Casey's Gold
   0xBB, 8,  // SUPERBank 256K
+  0xB0, 2,  // Digivision 8K ($fd0/$fb0)
 };
 
 byte a2600mapcount = (sizeof(a2600mapsize) / sizeof(a2600mapsize[0])) / 2;
@@ -544,6 +545,13 @@ void readROM_2600() {
       }
       break;
 
+    case 0xB0: // Digivision 8KB
+      readData_2600(0xFD0);
+      readSegment_2600(0x1000, 0x2000);
+      readData_2600(0xFB0);
+      readSegment_2600(0x1000, 0x2000);
+      break;
+
     default:
       break;
   }
@@ -589,6 +597,8 @@ void println_Mapper2600(byte mapper) {
     println_Msg(F("SB 128K"));
   else if (mapper == 0xBB)
     println_Msg(F("SB 256K"));
+  else if (mapper == 0xB0)
+    println_Msg(F("DV 8K"));
   else
     println_Msg(mapper, HEX);
 #else
@@ -618,6 +628,8 @@ void println_Mapper2600(byte mapper) {
     Serial.println(F("SB 128K"));
   else if (mapper == 0xBB)
     Serial.println(F("SB 256K"));
+  else if (mapper == 0xB0)
+    Serial.println(F("DV 8K"));
   else
     Serial.println(mapper, HEX);
 #endif
@@ -713,7 +725,8 @@ setmapper:
   Serial.println(F("20 = DFSC [Penult 128K]"));
   Serial.println(F("21 = SB [SuperBank Casey's Gold 128K]"));
   Serial.println(F("22 = SB [SuperBank 256K]"));
-  Serial.print(F("Enter Mapper [0-22]: "));
+  Serial.println(F("23 = DV [Digivision 8K]"));
+  Serial.print(F("Enter Mapper [0-23]: "));
   while (Serial.available() == 0) {}
   newmap = Serial.readStringUntil('\n');
   Serial.println(newmap);
