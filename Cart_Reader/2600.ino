@@ -546,9 +546,9 @@ void readROM_2600() {
       break;
 
     case 0xB0: // Digivision 8KB
-      readData_2600(0xFD0);
-      readSegment_2600(0x1000, 0x2000);
       readData_2600(0xFB0);
+      readSegment_2600(0x1000, 0x2000);
+      readData_2600(0xFD0);
       readSegment_2600(0x1000, 0x2000);
       break;
 
